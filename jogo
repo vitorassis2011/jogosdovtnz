@@ -1,480 +1,315 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bloco Blast</title>
+    <title>Quebra Blocos - Jogo em HTML</title>
     <style>
-        :root {
-            --bg: #2c3e50;
-            --accent: #e74c3c;
-        }
-
         body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
-            background: var(--bg);
-            color: #ecf0f1;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            text-align: center;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        .container {
-            max-width: 500px;
-            width: 100%;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin: 0 0 10px 0;
-            color: var(--accent);
-            text-shadow: 3px 3px 0 #000;
-            letter-spacing: 2px;
-        }
-
+        
         /* Tela de Login */
         #login-screen {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 40px 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            margin-top: 15vh;
         }
-
-        #login-screen p {
-            font-size: 1.2rem;
-            margin: 15px 0;
+        #login-screen h1 {
+            font-size: 3em;
+            color: #e74c3c;
+            text-shadow: 2px 2px 0px #000;
         }
-
         #player-name {
-            width: 280px;
-            padding: 14px;
-            font-size: 1.1rem;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
             border: none;
-            border-radius: 8px;
+            outline: none;
             text-align: center;
-            background: #34495e;
-            color: white;
-            margin-bottom: 15px;
         }
-
         #btn-start {
-            padding: 12px 40px;
-            font-size: 1.3rem;
-            background: #27ae60;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #27ae60;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
+            margin-top: 10px;
         }
-
         #btn-start:hover {
-            background: #2ecc71;
-            transform: scale(1.05);
+            background-color: #2ecc71;
         }
 
         /* Tela do Jogo */
         #game-screen {
             display: none;
+            margin-top: 20px;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: #34495e;
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            width: 480px;
+            margin: 0 auto 10px auto;
+            font-size: 20px;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            background: #34495e;
+            padding: 10px;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
-
         canvas {
-            background: #0f0f0f;
-            border: 6px solid #bdc3c7;
-            border-radius: 10px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
-            touch-action: none;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.85);
-            padding: 30px 50px;
-            border-radius: 15px;
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-        }
-
-        .overlay button {
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .overlay button:hover {
-            background: #2980b9;
+            background: #111;
+            border: 4px solid #bdc3c7;
+            border-radius: 5px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.8);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Tela de Login -->
     <div id="login-screen">
         <h1>BLOCO BLAST</h1>
-        <p>Digite seu nome para começar</p>
-        <input type="text" id="player-name" placeholder="Seu Nome" autocomplete="off" maxlength="15">
-        <br><br>
-        <button id="btn-start">JOGAR</button>
+        <p>Digite seu nome para começar:</p>
+        <input type="text" id="player-name" placeholder="Seu Nome" autocomplete="off"><br>
+        <button id="btn-start" onclick="iniciarJogo()">Jogar</button>
     </div>
 
-    <!-- Tela do Jogo -->
     <div id="game-screen">
         <div class="header">
-            <span id="display-name">Jogador: —</span>
+            <span id="display-name">Jogador: </span>
             <span id="display-level">Fase: 1</span>
             <span id="display-score">Pontos: 0</span>
-            <span id="display-lives">Vidas: ❤️❤️❤️</span>
         </div>
         <canvas id="gameCanvas" width="480" height="320"></canvas>
     </div>
-</div>
 
-<!-- Overlays -->
-<div id="pause-overlay" class="overlay">
-    <h2>Jogo Pausado</h2>
-    <button onclick="togglePause()">Continuar</button>
-    <button onclick="restartGame()">Reiniciar</button>
-</div>
+    <script>
+        // Variáveis de Controle de Tela
+        const telaLogin = document.getElementById("login-screen");
+        const telaJogo = document.getElementById("game-screen");
+        const inputNome = document.getElementById("player-name");
+        
+        // Exibições no Placar
+        const displayNome = document.getElementById("display-name");
+        const displayFase = document.getElementById("display-level");
+        const displayPontos = document.getElementById("display-score");
 
-<div id="game-over-overlay" class="overlay">
-    <h2>GAME OVER</h2>
-    <p id="final-score"></p>
-    <button onclick="restartGame()">Jogar Novamente</button>
-</div>
+        // Configuração do Canvas (Onde o jogo é desenhado)
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-<div id="win-overlay" class="overlay">
-    <h2>PARABÉNS!</h2>
-    <p id="win-message"></p>
-    <button onclick="nextLevel()">Próxima Fase</button>
-    <button onclick="restartGame()">Reiniciar Jogo</button>
-</div>
+        // Variáveis do Jogo
+        let animationId;
+        let nomeJogador = "";
+        let pontos = 0;
+        let fase = 1;
 
-<script>
-    // ==================== ELEMENTOS DOM ====================
-    const telaLogin = document.getElementById("login-screen");
-    const telaJogo = document.getElementById("game-screen");
-    const inputNome = document.getElementById("player-name");
-    const btnStart = document.getElementById("btn-start");
+        // Configurações da Bolinha
+        let raioBola = 8;
+        let x = canvas.width / 2;
+        let y = canvas.height - 30;
+        let dx = 3; // Velocidade horizontal
+        let dy = -3; // Velocidade vertical
 
-    const displayNome = document.getElementById("display-name");
-    const displayFase = document.getElementById("display-level");
-    const displayPontos = document.getElementById("display-score");
-    const displayVidas = document.getElementById("display-lives");
+        // Configurações da Base (Paddle)
+        let alturaBase = 10;
+        let larguraBase = 75;
+        let xBase = (canvas.width - larguraBase) / 2;
+        let setaDireita = false;
+        let setaEsquerda = false;
 
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
+        // Configurações dos Blocos
+        let linhasBlocos = 3;
+        let colunasBlocos = 5;
+        let larguraBloco = 75;
+        let alturaBloco = 20;
+        let espacamentoBloco = 10;
+        let margemTopo = 30;
+        let margemEsquerda = 30;
+        let blocos = [];
 
-    // ==================== VARIÁVEIS DO JOGO ====================
-    let nomeJogador = "";
-    let pontos = 0;
-    let fase = 1;
-    let vidas = 3;
-    let pausado = false;
-    let animationId;
+        // Capturar teclas do teclado
+        document.addEventListener("keydown", apertarTecla, false);
+        document.addEventListener("keyup", soltarTecla, false);
 
-    // Bola
-    const bola = {
-        raio: 8,
-        x: canvas.width / 2,
-        y: canvas.height - 40,
-        dx: 4,
-        dy: -4
-    };
-
-    // Paddle (base)
-    const paddle = {
-        largura: 80,
-        altura: 12,
-        x: (canvas.width - 80) / 2,
-        velocidade: 9
-    };
-
-    // Blocos
-    let blocos = [];
-    const colunas = 8;
-    const larguraBloco = 50;
-    const alturaBloco = 18;
-    const padding = 8;
-    const margemTopo = 40;
-    const margemEsquerda = 25;
-
-    // Controles
-    let direita = false;
-    let esquerda = false;
-
-    // ==================== EVENTOS ====================
-    document.addEventListener("keydown", e => {
-        if (e.key === "ArrowRight" || e.key === "d") direita = true;
-        if (e.key === "ArrowLeft" || e.key === "a") esquerda = true;
-        if (e.key === "p" || e.key === "P") togglePause();
-        if (e.key === "Enter" && telaLogin.style.display !== "none") iniciarJogo();
-    });
-
-    document.addEventListener("keyup", e => {
-        if (e.key === "ArrowRight" || e.key === "d") direita = false;
-        if (e.key === "ArrowLeft" || e.key === "a") esquerda = false;
-    });
-
-    // Suporte a toque/mobile
-    canvas.addEventListener("mousemove", e => {
-        const rect = canvas.getBoundingClientRect();
-        paddle.x = e.clientX - rect.left - paddle.largura / 2;
-    });
-
-    canvas.addEventListener("touchmove", e => {
-        const rect = canvas.getBoundingClientRect();
-        paddle.x = e.touches[0].clientX - rect.left - paddle.largura / 2;
-        e.preventDefault();
-    }, { passive: false });
-
-    btnStart.addEventListener("click", iniciarJogo);
-    inputNome.addEventListener("keypress", e => { if (e.key === "Enter") iniciarJogo(); });
-
-    // ==================== FUNÇÕES ====================
-    function criarBlocos() {
-        blocos = [];
-        const linhas = 3 + fase;
-
-        for (let c = 0; c < colunas; c++) {
-            blocos[c] = [];
-            for (let l = 0; l < linhas; l++) {
-                blocos[c][l] = { 
-                    x: 0, 
-                    y: 0, 
-                    status: 1,
-                    cor: `hsl(${l * 40 + 200}, 80%, 60%)`
-                };
-            }
+        function apertarTecla(e) {
+            if(e.key == "Right" || e.key == "ArrowRight") setaDireita = true;
+            else if(e.key == "Left" || e.key == "ArrowLeft") setaEsquerda = true;
         }
 
-        // Aumenta velocidade gradualmente
-        bola.dx = 3.5 + fase * 0.6;
-        bola.dy = - (3.5 + fase * 0.6);
-    }
+        function soltarTecla(e) {
+            if(e.key == "Right" || e.key == "ArrowRight") setaDireita = false;
+            else if(e.key == "Left" || e.key == "ArrowLeft") setaEsquerda = false;
+        }
 
-    function desenharBola() {
-        ctx.beginPath();
-        ctx.arc(bola.x, bola.y, bola.raio, 0, Math.PI * 2);
-        ctx.fillStyle = "#e74c3c";
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = "#e74c3c";
-        ctx.fill();
-        ctx.closePath();
-        ctx.shadowBlur = 0;
-    }
+        // Função de Login
+        function iniciarJogo() {
+            if (inputNome.value.trim() === "") {
+                alert("Por favor, digite seu nome!");
+                return;
+            }
+            nomeJogador = inputNome.value;
+            displayNome.innerText = "Jogador: " + nomeJogador;
+            
+            telaLogin.style.display = "none";
+            telaJogo.style.display = "block";
+            
+            criarBlocos();
+            desenhar();
+        }
 
-    function desenharPaddle() {
-        ctx.beginPath();
-        ctx.roundRect(paddle.x, canvas.height - paddle.altura - 5, paddle.largura, paddle.altura, 6);
-        ctx.fillStyle = "#3498db";
-        ctx.fill();
-        ctx.closePath();
-    }
-
-    function desenharBlocos() {
-        for (let c = 0; c < colunas; c++) {
-            for (let l = 0; l < blocos[c].length; l++) {
-                const b = blocos[c][l];
-                if (b.status === 1) {
-                    b.x = c * (larguraBloco + padding) + margemEsquerda;
-                    b.y = l * (alturaBloco + padding) + margemTopo;
-
-                    ctx.beginPath();
-                    ctx.roundRect(b.x, b.y, larguraBloco, alturaBloco, 4);
-                    ctx.fillStyle = b.cor;
-                    ctx.fill();
-                    ctx.closePath();
+        // Cria os blocos baseados na fase atual
+        function criarBlocos() {
+            linhasBlocos = 2 + fase; // A cada fase, adiciona mais uma linha de blocos
+            blocos = [];
+            for(let c = 0; c < colunasBlocos; c++) {
+                blocos[c] = [];
+                for(let l = 0; l < linhasBlocos; l++) {
+                    blocos[c][l] = { x: 0, y: 0, status: 1 };
                 }
             }
+            
+            // Aumenta a velocidade da bola a cada fase
+            let velocidadeBase = 2 + (fase * 0.5);
+            dx = velocidadeBase;
+            dy = -velocidadeBase;
+            
+            // Centraliza a bolinha e a base
+            x = canvas.width / 2;
+            y = canvas.height - 30;
+            xBase = (canvas.width - larguraBase) / 2;
         }
-    }
 
-    function detectarColisao() {
-        for (let c = 0; c < colunas; c++) {
-            for (let l = 0; l < blocos[c].length; l++) {
-                const b = blocos[c][l];
-                if (b.status === 1) {
-                    if (bola.x + bola.raio > b.x && 
-                        bola.x - bola.raio < b.x + larguraBloco &&
-                        bola.y + bola.raio > b.y && 
-                        bola.y - bola.raio < b.y + alturaBloco) {
-                        
-                        bola.dy = -bola.dy;
-                        b.status = 0;
-                        pontos += 10 + fase * 2;
-                        displayPontos.textContent = `Pontos: ${pontos}`;
-                        verificarVitoria();
-                        return; // evita múltiplas colisões no mesmo frame
+        // Detecta quando a bola bate em um bloco
+        function detectarColisao() {
+            for(let c = 0; c < colunasBlocos; c++) {
+                for(let l = 0; l < linhasBlocos; l++) {
+                    let b = blocos[c][l];
+                    if(b.status == 1) {
+                        // Se a bola estiver dentro das coordenadas do bloco
+                        if(x > b.x && x < b.x + larguraBloco && y > b.y && y < b.y + alturaBloco) {
+                            dy = -dy; // Inverte a direção vertical
+                            b.status = 0; // "Quebra" o bloco
+                            pontos += 10;
+                            displayPontos.innerText = "Pontos: " + pontos;
+                            
+                            verificarVitoria();
+                        }
                     }
                 }
             }
         }
-    }
 
-    function verificarVitoria() {
-        const restantes = blocos.flat().filter(b => b.status === 1).length;
-        if (restantes === 0) {
-            cancelAnimationFrame(animationId);
-            document.getElementById("win-message").textContent = 
-                `Você completou a Fase ${fase}! Pontos: ${pontos}`;
-            document.getElementById("win-overlay").style.display = "flex";
-        }
-    }
-
-    function atualizarPosicoes() {
-        // Movimento do paddle
-        if (direita && paddle.x < canvas.width - paddle.largura) paddle.x += paddle.velocidade;
-        if (esquerda && paddle.x > 0) paddle.x -= paddle.velocidade;
-
-        // Movimento da bola
-        bola.x += bola.dx;
-        bola.y += bola.dy;
-
-        // Colisões com paredes
-        if (bola.x + bola.raio > canvas.width || bola.x - bola.raio < 0) bola.dx = -bola.dx;
-        if (bola.y - bola.raio < 0) bola.dy = -bola.dy;
-
-        // Colisão com paddle
-        if (bola.y + bola.raio > canvas.height - paddle.altura - 5 &&
-            bola.y - bola.raio < canvas.height - 5 &&
-            bola.x > paddle.x && bola.x < paddle.x + paddle.largura) {
-            bola.dy = -Math.abs(bola.dy);
-            // Efeito de ângulo baseado na posição do impacto
-            const hitPos = (bola.x - (paddle.x + paddle.largura / 2)) / (paddle.largura / 2);
-            bola.dx = hitPos * 5;
-        }
-
-        // Caiu no fundo
-        if (bola.y + bola.raio > canvas.height) {
-            vidas--;
-            displayVidas.textContent = "Vidas: " + "❤️".repeat(vidas);
-
-            if (vidas <= 0) {
-                gameOver();
-            } else {
-                // Reset posição
-                bola.x = canvas.width / 2;
-                bola.y = canvas.height - 40;
-                bola.dx = 4 + fase * 0.5;
-                bola.dy = - (4 + fase * 0.5);
-                paddle.x = (canvas.width - paddle.largura) / 2;
+        // Verifica se todos os blocos foram quebrados
+        function verificarVitoria() {
+            let blocosRestantes = 0;
+            for(let c = 0; c < colunasBlocos; c++) {
+                for(let l = 0; l < linhasBlocos; l++) {
+                    if(blocos[c][l].status == 1) blocosRestantes++;
+                }
+            }
+            
+            if(blocosRestantes === 0) {
+                cancelAnimationFrame(animationId);
+                alert("Parabéns " + nomeJogador + "! Você passou para a Fase " + (fase + 1) + "!");
+                fase++;
+                displayFase.innerText = "Fase: " + fase;
+                criarBlocos();
+                desenhar(); // Reinicia o loop
             }
         }
-    }
 
-    function desenhar() {
-        if (pausado) return;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        desenharBlocos();
-        desenharBola();
-        desenharPaddle();
-        detectarColisao();
-        atualizarPosicoes();
-
-        animationId = requestAnimationFrame(desenhar);
-    }
-
-    function gameOver() {
-        cancelAnimationFrame(animationId);
-        document.getElementById("final-score").innerHTML = 
-            `Pontuação final: <strong>${pontos}</strong><br>Fase alcançada: ${fase}`;
-        document.getElementById("game-over-overlay").style.display = "flex";
-    }
-
-    function togglePause() {
-        pausado = !pausado;
-        document.getElementById("pause-overlay").style.display = pausado ? "flex" : "none";
-        if (!pausado) desenhar();
-    }
-
-    function iniciarJogo() {
-        if (inputNome.value.trim() === "") {
-            alert("Por favor, digite seu nome!");
-            return;
+        // Funções de Desenho (Bola, Base e Blocos)
+        function desenharBola() {
+            ctx.beginPath();
+            ctx.arc(x, y, raioBola, 0, Math.PI*2);
+            ctx.fillStyle = "#e74c3c";
+            ctx.fill();
+            ctx.closePath();
         }
 
-        nomeJogador = inputNome.value.trim().slice(0, 15);
-        displayNome.textContent = `Jogador: ${nomeJogador}`;
+        function desenharBase() {
+            ctx.beginPath();
+            ctx.rect(xBase, canvas.height - alturaBase, larguraBase, alturaBase);
+            ctx.fillStyle = "#3498db";
+            ctx.fill();
+            ctx.closePath();
+        }
 
-        telaLogin.style.display = "none";
-        telaJogo.style.display = "block";
+        function desenharBlocos() {
+            for(let c = 0; c < colunasBlocos; c++) {
+                for(let l = 0; l < linhasBlocos; l++) {
+                    if(blocos[c][l].status == 1) {
+                        let blocoX = (c * (larguraBloco + espacamentoBloco)) + margemEsquerda;
+                        let blocoY = (l * (alturaBloco + espacamentoBloco)) + margemTopo;
+                        blocos[c][l].x = blocoX;
+                        blocos[c][l].y = blocoY;
+                        
+                        ctx.beginPath();
+                        ctx.rect(blocoX, blocoY, larguraBloco, alturaBloco);
+                        // Cores diferentes por linha
+                        let cores = ["#f1c40f", "#e67e22", "#9b59b6", "#1abc9c", "#e74c3c"];
+                        ctx.fillStyle = cores[l % cores.length];
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                }
+            }
+        }
 
-        resetLevel();
-        desenhar();
-    }
+        // Loop principal do Jogo
+        function desenhar() {
+            // Limpa o frame anterior
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            desenharBlocos();
+            desenharBola();
+            desenharBase();
+            detectarColisao();
 
-    function resetLevel() {
-        pontos = 0;
-        vidas = 3;
-        fase = 1;
-        displayPontos.textContent = "Pontos: 0";
-        displayFase.textContent = "Fase: 1";
-        displayVidas.textContent = "Vidas: ❤️❤️❤️";
+            // Colisão com as paredes esquerda e direita
+            if(x + dx > canvas.width - raioBola || x + dx < raioBola) {
+                dx = -dx;
+            }
+            
+            // Colisão com o teto
+            if(y + dy < raioBola) {
+                dy = -dy;
+            } 
+            // Colisão com o chão / Base
+            else if(y + dy > canvas.height - raioBola) {
+                // Se bater na base
+                if(x > xBase && x < xBase + larguraBase) {
+                    dy = -dy;
+                } else {
+                    // Game Over
+                    alert("GAME OVER! Fim de jogo, " + nomeJogador + ". Sua pontuação foi: " + pontos);
+                    document.location.reload(); // Recarrega a página
+                    return;
+                }
+            }
 
-        criarBlocos();
-        bola.x = canvas.width / 2;
-        bola.y = canvas.height - 40;
-        bola.dx = 4;
-        bola.dy = -4;
-        paddle.x = (canvas.width - paddle.largura) / 2;
-    }
+            // Movimentação da Base
+            if(setaDireita && xBase < canvas.width - larguraBase) {
+                xBase += 7;
+            } else if(setaEsquerda && xBase > 0) {
+                xBase -= 7;
+            }
 
-    function nextLevel() {
-        document.getElementById("win-overlay").style.display = "none";
-        fase++;
-        displayFase.textContent = `Fase: ${fase}`;
-        criarBlocos();
-        bola.x = canvas.width / 2;
-        bola.y = canvas.height - 40;
-        paddle.x = (canvas.width - paddle.largura) / 2;
-        desenhar();
-    }
+            // Move a bola
+            x += dx;
+            y += dy;
 
-    function restartGame() {
-        document.getElementById("game-over-overlay").style.display = "none";
-        document.getElementById("win-overlay").style.display = "none";
-        document.getElementById("pause-overlay").style.display = "none";
-        
-        telaJogo.style.display = "none";
-        telaLogin.style.display = "block";
-        inputNome.value = "";
-        resetLevel();
-    }
-
-    // Inicia com foco no input
-    window.onload = () => inputNome.focus();
-</script>
+            // Chama o próximo frame
+            animationId = requestAnimationFrame(desenhar);
+        }
+    </script>
 </body>
 </html>
