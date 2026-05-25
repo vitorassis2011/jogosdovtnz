@@ -1,189 +1,303 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HAJA - Sistema de Gestão</title>
+  <title>Haja - Sistema de Gestão</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body { font-family: 'Segoe UI', sans-serif; }
-    .nav-active { background-color: #1e40af; color: white; }
+    .nav-active { background-color: #1e40af; border-left: 4px solid #60a5fa; color: white; }
+    .input-style { border: 1px solid #e5e7eb; padding: 0.75rem; border-radius: 0.375rem; width: 100%; outline: none; transition: box-shadow 0.2s; }
+    .input-style:focus { box-shadow: 0 0 0 2px #3b82f6; }
   </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-gray-800">
 
 <div class="flex h-screen">
 
-  <!-- Sidebar -->
-  <div class="w-64 bg-blue-900 text-white">
-    <div class="p-6 text-2xl font-bold border-b border-blue-800">🌐 HAJA</div>
-    <nav class="mt-6">
-      <a href="#" onclick="showSection('clientes')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800">
-        <i class="fas fa-user mr-3"></i> Clientes
+  <div class="w-64 bg-blue-900 text-white flex flex-col shadow-xl z-10">
+    <div class="p-6 text-3xl font-bold border-b border-blue-800 flex items-center">
+      <i class="fas fa-globe mr-3 text-blue-400"></i> Haja
+    </div>
+    <nav class="mt-4 flex-1 overflow-y-auto" id="sidebar-nav">
+      <a href="#" onclick="showSection('clientes', this)" class="nav-item flex items-center px-6 py-4 hover:bg-blue-800 nav-active transition-colors">
+        <i class="fas fa-user w-6"></i> Clientes
       </a>
-      <a href="#" onclick="showSection('produtos')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800">
-        <i class="fas fa-box mr-3"></i> Produtos
+      <a href="#" onclick="showSection('produtos', this)" class="nav-item flex items-center px-6 py-4 hover:bg-blue-800 transition-colors">
+        <i class="fas fa-box w-6"></i> Produtos
       </a>
-      <a href="#" onclick="showSection('funcionarios')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800">
-        <i class="fas fa-users mr-3"></i> Funcionários
+      <a href="#" onclick="showSection('funcionarios', this)" class="nav-item flex items-center px-6 py-4 hover:bg-blue-800 transition-colors">
+        <i class="fas fa-users w-6"></i> Funcionários
       </a>
-      <a href="#" onclick="showSection('vendas')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800">
-        <i class="fas fa-shopping-cart mr-3"></i> Produtos Vendidos
+      <a href="#" onclick="showSection('vendas', this)" class="nav-item flex items-center px-6 py-4 hover:bg-blue-800 transition-colors">
+        <i class="fas fa-shopping-cart w-6"></i> Vendas
       </a>
-      <a href="#" onclick="showSection('estoque')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800">
-        <i class="fas fa-warehouse mr-3"></i> Estoque
+      <a href="#" onclick="showSection('estoque', this)" class="nav-item flex items-center px-6 py-4 hover:bg-blue-800 transition-colors">
+        <i class="fas fa-warehouse w-6"></i> Estoque
       </a>
-      <a href="#" onclick="showSection('relatorios')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 nav-active">
-        <i class="fas fa-chart-bar mr-3"></i> Relatórios
+      <div class="my-2 border-t border-blue-800"></div>
+      <a href="#" onclick="showSection('relatorios', this)" class="nav-item flex items-center px-6 py-4 hover:bg-blue-800 transition-colors text-blue-300 hover:text-white">
+        <i class="fas fa-chart-pie w-6"></i> Relatórios
       </a>
     </nav>
   </div>
 
-  <!-- Main Content -->
-  <div class="flex-1 overflow-auto">
-
-    <header class="bg-white shadow p-4 flex justify-between items-center">
-      <h1 class="text-2xl font-semibold text-gray-800" id="page-title">Relatórios - HAJA</h1>
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <header class="bg-white shadow-sm p-4 flex justify-between items-center z-0 border-b">
+      <h1 class="text-2xl font-semibold text-gray-800" id="page-title">Cadastro de Clientes</h1>
+      <div class="text-sm text-gray-500"><i class="fas fa-calendar-alt mr-2"></i><span id="current-date"></span></div>
     </header>
 
-    <!-- ==================== RELATÓRIOS ==================== -->
-    <div id="section-relatorios" class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-xl shadow text-center">
-          <h3 class="text-gray-600">Total Clientes</h3>
-          <p id="total-clientes" class="text-4xl font-bold text-blue-600">0</p>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">
-          <h3 class="text-gray-600">Total Produtos</h3>
-          <p id="total-produtos" class="text-4xl font-bold text-green-600">0</p>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">
-          <h3 class="text-gray-600">Total Funcionários</h3>
-          <p id="total-funcionarios" class="text-4xl font-bold text-purple-600">0</p>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">
-          <h3 class="text-gray-600">Total Vendido</h3>
-          <p id="total-vendido" class="text-4xl font-bold text-orange-600">R$ 0,00</p>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow text-center">
-          <h3 class="text-gray-600">Itens em Estoque</h3>
-          <p id="total-estoque" class="text-4xl font-bold text-teal-600">0</p>
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+
+      <div id="section-clientes" class="section-div">
+        <form id="form-cliente" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
+          <input type="text" id="c_nome" placeholder="Nome completo" class="input-style" required>
+          <input type="text" id="c_cpf" placeholder="CPF" class="input-style" required>
+          <input type="text" id="c_cep" placeholder="CEP" class="input-style">
+          <input type="tel" id="c_telefone" placeholder="Telefone" class="input-style">
+          <select id="c_genero" class="input-style">
+            <option value="">Gênero</option>
+            <option>Masculino</option>
+            <option>Feminino</option>
+            <option>Outro</option>
+          </select>
+          <input type="email" id="c_email" placeholder="Email" class="input-style">
+          <button type="submit" class="md:col-span-2 bg-blue-600 text-white font-semibold py-3 rounded hover:bg-blue-700 transition">Cadastrar Cliente</button>
+        </form>
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <table class="w-full text-left" id="table-clientes">
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">CPF</th><th class="p-4 font-semibold">Telefone</th><th class="p-4 font-semibold">Email</th></tr></thead>
+            <tbody class="divide-y divide-gray-200"></tbody>
+          </table>
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">Relatório de Vendas (Produtos Vendidos)</h2>
-        <table class="w-full" id="table-vendas">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="p-3 text-left">Produto</th>
-              <th class="p-3 text-center">Qtd</th>
-              <th class="p-3 text-right">Valor Total</th>
-              <th class="p-3 text-right">Desconto</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div id="section-produtos" class="section-div hidden">
+        <form id="form-produto" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
+          <input type="text" id="p_nome" placeholder="Nome do Produto" class="input-style" required>
+          <input type="number" id="p_valor" placeholder="Valor (R$)" step="0.01" class="input-style" required>
+          <input type="text" id="p_tamanho" placeholder="Tamanho" class="input-style">
+          <input type="text" id="p_marca" placeholder="Marca" class="input-style">
+          <input type="text" id="p_tipo" placeholder="Tipo" class="input-style">
+          <input type="text" id="p_cor" placeholder="Cor" class="input-style">
+          <textarea id="p_espec" placeholder="Especificação" class="input-style md:col-span-2 resize-none h-24"></textarea>
+          <button type="submit" class="md:col-span-2 bg-green-600 text-white font-semibold py-3 rounded hover:bg-green-700 transition">Cadastrar Produto</button>
+        </form>
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <table class="w-full text-left" id="table-produtos">
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">Marca</th><th class="p-4 font-semibold">Tipo</th><th class="p-4 font-semibold">Valor (R$)</th></tr></thead>
+            <tbody class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <!-- Seções de Cadastro (mantidas e melhoradas) -->
-    <div id="section-clientes" class="p-6 hidden">... (formulário de cliente) ...</div>
-    <div id="section-produtos" class="p-6 hidden">... (formulário de produto) ...</div>
-    <div id="section-funcionarios" class="p-6 hidden">... (formulário de funcionário) ...</div>
-    <div id="section-vendas" class="p-6 hidden">... (formulário de venda) ...</div>
-    <div id="section-estoque" class="p-6 hidden">... (formulário de estoque) ...</div>
+      <div id="section-funcionarios" class="section-div hidden">
+        <form id="form-funcionario" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
+          <input type="text" id="f_nome" placeholder="Nome" class="input-style" required>
+          <input type="text" id="f_cpf" placeholder="CPF" class="input-style" required>
+          <input type="text" id="f_cep" placeholder="CEP" class="input-style">
+          <select id="f_genero" class="input-style"><option value="">Gênero</option><option>Masculino</option><option>Feminino</option></select>
+          <select id="f_estado" class="input-style"><option value="">Estado Civil</option><option>Solteiro</option><option>Casado</option><option>Divorciado</option></select>
+          <input type="text" id="f_cargo" placeholder="Cargo" class="input-style">
+          <input type="number" id="f_idade" placeholder="Idade" class="input-style">
+          <input type="number" id="f_salario" placeholder="Salário (R$)" step="0.01" class="input-style">
+          <button type="submit" class="md:col-span-2 bg-purple-600 text-white font-semibold py-3 rounded hover:bg-purple-700 transition">Cadastrar Funcionário</button>
+        </form>
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <table class="w-full text-left" id="table-funcionarios">
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">Cargo</th><th class="p-4 font-semibold">Idade</th><th class="p-4 font-semibold">Salário (R$)</th></tr></thead>
+            <tbody class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
 
+      <div id="section-vendas" class="section-div hidden">
+        <form id="form-venda" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
+          <input type="text" id="v_produto" placeholder="Nome/ID do Produto Vendido" class="input-style" required>
+          <input type="number" id="v_qtd" placeholder="Quantidade Vendida" class="input-style" required>
+          <input type="number" id="v_valortotal" placeholder="Valor Total (R$)" step="0.01" class="input-style" required>
+          <select id="v_desconto" class="input-style"><option value="Sem Desconto">Sem Desconto</option><option value="Com Desconto">Com Desconto</option></select>
+          <input type="text" id="v_cor" placeholder="Cor" class="input-style">
+          <input type="text" id="v_tamanho" placeholder="Tamanho" class="input-style">
+          <button type="submit" class="md:col-span-2 bg-orange-600 text-white font-semibold py-3 rounded hover:bg-orange-700 transition">Registrar Venda</button>
+        </form>
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <table class="w-full text-left" id="table-vendas">
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Produto</th><th class="p-4 font-semibold">Qtd</th><th class="p-4 font-semibold">Total (R$)</th><th class="p-4 font-semibold">Desconto</th></tr></thead>
+            <tbody class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="section-estoque" class="section-div hidden">
+        <form id="form-estoque" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
+          <input type="text" id="e_produto" placeholder="Nome/ID do Produto" class="input-style" required>
+          <input type="number" id="e_quantidade" placeholder="Quantidade em Estoque" class="input-style" required>
+          <input type="text" id="e_lote" placeholder="Lote / Referência" class="input-style">
+          <input type="text" id="e_fornecedor" placeholder="Fornecedor" class="input-style">
+          <button type="submit" class="md:col-span-2 bg-teal-600 text-white font-semibold py-3 rounded hover:bg-teal-700 transition">Atualizar Estoque</button>
+        </form>
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <table class="w-full text-left" id="table-estoque">
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Produto</th><th class="p-4 font-semibold">Quantidade</th><th class="p-4 font-semibold">Lote</th><th class="p-4 font-semibold">Fornecedor</th></tr></thead>
+            <tbody class="divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="section-relatorios" class="section-div hidden">
+        
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-blue-500">
+            <h3 class="text-gray-500 text-sm font-bold uppercase">Clientes</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-clientes">0</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-green-500">
+            <h3 class="text-gray-500 text-sm font-bold uppercase">Produtos</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-produtos">0</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-purple-500">
+            <h3 class="text-gray-500 text-sm font-bold uppercase">Funcionários</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-funcionarios">0</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-orange-500">
+            <h3 class="text-gray-500 text-sm font-bold uppercase">Vendas</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-vendas">0</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-teal-500">
+            <h3 class="text-gray-500 text-sm font-bold uppercase">Itens no Estoque</h3>
+            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-estoque">0</p>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg">
+          <h2 class="font-bold text-lg mb-2"><i class="fas fa-info-circle mr-2"></i>Status do Sistema Haja</h2>
+          <p>Os painéis acima mostram o volume de dados cadastrados na sessão atual. Para visualizar detalhes granulares, acesse as respectivas abas no menu lateral onde as tabelas completas estão disponíveis logo abaixo de cada formulário.</p>
+        </div>
+
+      </div>
+
+    </main>
   </div>
 </div>
 
 <script>
-// Variáveis
-let clientes = [], produtos = [], funcionarios = [], vendas = [], estoque = [];
+// Data de hoje no cabeçalho
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-// Alternar seções
-function showSection(section) {
-  document.querySelectorAll('div[id^="section-"]').forEach(div => div.classList.add('hidden'));
+// Banco de dados simulado (Em memória)
+const db = {
+  clientes: [],
+  produtos: [],
+  funcionarios: [],
+  vendas: [],
+  estoque: []
+};
+
+// Alternar seções e atualizar menu ativo
+function showSection(section, element = null) {
+  // Esconde todas as seções
+  document.querySelectorAll('.section-div').forEach(div => div.classList.add('hidden'));
+  // Mostra a seção desejada
   document.getElementById(`section-${section}`).classList.remove('hidden');
-  document.getElementById('page-title').textContent = section === 'relatorios' ? 'Relatórios - HAJA' : `Cadastro de ${section.charAt(0).toUpperCase() + section.slice(1)}`;
   
-  if (section === 'relatorios') atualizarRelatorios();
+  // Atualiza título da página
+  const titulos = {
+    'clientes': 'Cadastro de Clientes',
+    'produtos': 'Cadastro de Produtos',
+    'funcionarios': 'Cadastro de Funcionários',
+    'vendas': 'Registro de Vendas',
+    'estoque': 'Gestão de Estoque',
+    'relatorios': 'Dashboard e Relatórios Gerais'
+  };
+  document.getElementById('page-title').textContent = titulos[section];
+
+  // Atualiza classe ativa no menu
+  if (element) {
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('nav-active'));
+    element.classList.add('nav-active');
+  }
+
+  // Se clicou em relatórios, atualiza os contadores
+  if(section === 'relatorios') {
+    atualizarRelatorios();
+  }
 }
 
-// Formulário Cliente
+// Função genérica para adicionar linhas nas tabelas de cada aba
+function appendRow(tableId, rowData) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  const row = document.createElement('tr');
+  row.className = 'hover:bg-gray-50 transition-colors';
+  row.innerHTML = rowData.map(data => `<td class="p-4 border-b border-gray-100">${data || '-'}</td>`).join('');
+  tbody.appendChild(row);
+}
+
+// Atualizar cards do Dashboard
+function atualizarRelatorios() {
+  document.getElementById('resumo-clientes').textContent = db.clientes.length;
+  document.getElementById('resumo-produtos').textContent = db.produtos.length;
+  document.getElementById('resumo-funcionarios').textContent = db.funcionarios.length;
+  document.getElementById('resumo-vendas').textContent = db.vendas.length;
+  
+  // Somar total de itens no estoque
+  const totalEstoque = db.estoque.reduce((acc, curr) => acc + Number(curr.qtd), 0);
+  document.getElementById('resumo-estoque').textContent = totalEstoque;
+}
+
+// Lógica de Submissão - Clientes
 document.getElementById('form-cliente').addEventListener('submit', function(e) {
   e.preventDefault();
-  clientes.push({nome: document.getElementById('nome').value});
-  alert('Cliente cadastrado com sucesso!');
+  const c = { nome: document.getElementById('c_nome').value, cpf: document.getElementById('c_cpf').value, tel: document.getElementById('c_telefone').value, email: document.getElementById('c_email').value };
+  db.clientes.push(c);
+  appendRow('table-clientes', [c.nome, c.cpf, c.tel, c.email]);
   this.reset();
-  atualizarRelatorios();
+  alert('Cliente cadastrado com sucesso!');
 });
 
-// Formulário Produto
+// Lógica de Submissão - Produtos
 document.getElementById('form-produto').addEventListener('submit', function(e) {
   e.preventDefault();
-  produtos.push({
-    id: Date.now(),
-    nome: document.getElementById('p_nome').value
-  });
-  alert('Produto cadastrado!');
+  const p = { nome: document.getElementById('p_nome').value, marca: document.getElementById('p_marca').value, tipo: document.getElementById('p_tipo').value, valor: document.getElementById('p_valor').value };
+  db.produtos.push(p);
+  appendRow('table-produtos', [p.nome, p.marca, p.tipo, `R$ ${p.valor}`]);
   this.reset();
-  atualizarRelatorios();
+  alert('Produto cadastrado com sucesso!');
 });
 
-// Formulário Funcionário
+// Lógica de Submissão - Funcionários
 document.getElementById('form-funcionario').addEventListener('submit', function(e) {
   e.preventDefault();
-  funcionarios.push({nome: document.getElementById('f_nome').value});
-  alert('Funcionário cadastrado!');
+  const f = { nome: document.getElementById('f_nome').value, cargo: document.getElementById('f_cargo').value, idade: document.getElementById('f_idade').value, salario: document.getElementById('f_salario').value };
+  db.funcionarios.push(f);
+  appendRow('table-funcionarios', [f.nome, f.cargo, f.idade, `R$ ${f.salario}`]);
   this.reset();
-  atualizarRelatorios();
+  alert('Funcionário cadastrado com sucesso!');
 });
 
-// Formulário Venda (com desconto)
+// Lógica de Submissão - Vendas
 document.getElementById('form-venda').addEventListener('submit', function(e) {
   e.preventDefault();
-  vendas.push({
-    produto: "Produto " + document.getElementById('v_idproduto').value,
-    quantidade: parseFloat(document.getElementById('v_qtd').value),
-    valorTotal: parseFloat(document.getElementById('v_valortotal').value),
-    desconto: document.getElementById('v_desconto').value === 'sim' ? 'Sim' : 'Não'
-  });
-  alert('Venda registrada com sucesso!');
+  const v = { prod: document.getElementById('v_produto').value, qtd: document.getElementById('v_qtd').value, total: document.getElementById('v_valortotal').value, desc: document.getElementById('v_desconto').value };
+  db.vendas.push(v);
+  appendRow('table-vendas', [v.prod, v.qtd, `R$ ${v.total}`, v.desc]);
   this.reset();
-  atualizarRelatorios();
+  alert('Venda registrada com sucesso!');
 });
 
-// Atualizar Relatórios
-function atualizarRelatorios() {
-  document.getElementById('total-clientes').textContent = clientes.length;
-  document.getElementById('total-produtos').textContent = produtos.length;
-  document.getElementById('total-funcionarios').textContent = funcionarios.length;
-  document.getElementById('total-estoque').textContent = "48";
+// Lógica de Submissão - Estoque
+document.getElementById('form-estoque').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const es = { prod: document.getElementById('e_produto').value, qtd: document.getElementById('e_quantidade').value, lote: document.getElementById('e_lote').value, forn: document.getElementById('e_fornecedor').value };
+  db.estoque.push(es);
+  appendRow('table-estoque', [es.prod, es.qtd, es.lote, es.forn]);
+  this.reset();
+  alert('Estoque atualizado com sucesso!');
+});
 
-  let totalVendido = vendas.reduce((sum, v) => sum + (v.valorTotal || 0), 0);
-  document.getElementById('total-vendido').textContent = `R$ ${totalVendido.toFixed(2)}`;
-
-  // Tabela de Vendas
-  const tbody = document.querySelector('#table-vendas tbody');
-  tbody.innerHTML = '';
-  vendas.forEach(v => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="p-3">${v.produto}</td>
-      <td class="p-3 text-center">${v.quantidade}</td>
-      <td class="p-3 text-right">R$ ${v.valorTotal.toFixed(2)}</td>
-      <td class="p-3 text-center">${v.desconto}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Inicializar
-showSection('relatorios');
 </script>
-
 </body>
 </html>
