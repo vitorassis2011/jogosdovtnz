@@ -65,11 +65,11 @@
             <option>Outro</option>
           </select>
           <input type="email" id="c_email" placeholder="Email" class="input-style">
-          <button type="submit" class="md:col-span-2 bg-blue-600 text-white font-semibold py-3 rounded hover:bg-blue-700 transition">Cadastrar Cliente</button>
+          <button type="submit" id="btn-cliente" class="md:col-span-2 bg-blue-600 text-white font-semibold py-3 rounded hover:bg-blue-700 transition">Cadastrar Cliente</button>
         </form>
         <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
           <table class="w-full text-left" id="table-clientes">
-            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">CPF</th><th class="p-4 font-semibold">Telefone</th><th class="p-4 font-semibold">Email</th></tr></thead>
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">CPF</th><th class="p-4 font-semibold">Telefone</th><th class="p-4 font-semibold">Email</th><th class="p-4 font-semibold">Ações</th></tr></thead>
             <tbody class="divide-y divide-gray-200"></tbody>
           </table>
         </div>
@@ -84,11 +84,11 @@
           <input type="text" id="p_tipo" placeholder="Tipo" class="input-style">
           <input type="text" id="p_cor" placeholder="Cor" class="input-style">
           <textarea id="p_espec" placeholder="Especificação" class="input-style md:col-span-2 resize-none h-24"></textarea>
-          <button type="submit" class="md:col-span-2 bg-green-600 text-white font-semibold py-3 rounded hover:bg-green-700 transition">Cadastrar Produto</button>
+          <button type="submit" id="btn-produto" class="md:col-span-2 bg-green-600 text-white font-semibold py-3 rounded hover:bg-green-700 transition">Cadastrar Produto</button>
         </form>
         <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
           <table class="w-full text-left" id="table-produtos">
-            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">Marca</th><th class="p-4 font-semibold">Tipo</th><th class="p-4 font-semibold">Valor (R$)</th></tr></thead>
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">Marca</th><th class="p-4 font-semibold">Tipo</th><th class="p-4 font-semibold">Valor (R$)</th><th class="p-4 font-semibold">Ações</th></tr></thead>
             <tbody class="divide-y divide-gray-200"></tbody>
           </table>
         </div>
@@ -104,11 +104,11 @@
           <input type="text" id="f_cargo" placeholder="Cargo" class="input-style">
           <input type="number" id="f_idade" placeholder="Idade" class="input-style">
           <input type="number" id="f_salario" placeholder="Salário (R$)" step="0.01" class="input-style">
-          <button type="submit" class="md:col-span-2 bg-purple-600 text-white font-semibold py-3 rounded hover:bg-purple-700 transition">Cadastrar Funcionário</button>
+          <button type="submit" id="btn-funcionario" class="md:col-span-2 bg-purple-600 text-white font-semibold py-3 rounded hover:bg-purple-700 transition">Cadastrar Funcionário</button>
         </form>
         <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
           <table class="w-full text-left" id="table-funcionarios">
-            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">Cargo</th><th class="p-4 font-semibold">Idade</th><th class="p-4 font-semibold">Salário (R$)</th></tr></thead>
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Nome</th><th class="p-4 font-semibold">Cargo</th><th class="p-4 font-semibold">Idade</th><th class="p-4 font-semibold">Salário (R$)</th><th class="p-4 font-semibold">Ações</th></tr></thead>
             <tbody class="divide-y divide-gray-200"></tbody>
           </table>
         </div>
@@ -118,186 +118,16 @@
         <form id="form-venda" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
           <input type="text" id="v_produto" placeholder="Nome/ID do Produto Vendido" class="input-style" required>
           <input type="number" id="v_qtd" placeholder="Quantidade Vendida" class="input-style" required>
-          <input type="number" id="v_valortotal" placeholder="Valor Total (R$)" step="0.01" class="input-style" required>
-          <select id="v_desconto" class="input-style"><option value="Sem Desconto">Sem Desconto</option><option value="Com Desconto">Com Desconto</option></select>
+          <input type="number" id="v_valortotal" placeholder="Valor Total Bruto (R$)" step="0.01" class="input-style" required>
+          <input type="number" id="v_desconto" placeholder="Valor do Desconto (R$)" step="0.01" class="input-style">
           <input type="text" id="v_cor" placeholder="Cor" class="input-style">
           <input type="text" id="v_tamanho" placeholder="Tamanho" class="input-style">
-          <button type="submit" class="md:col-span-2 bg-orange-600 text-white font-semibold py-3 rounded hover:bg-orange-700 transition">Registrar Venda</button>
+          <button type="submit" id="btn-venda" class="md:col-span-2 bg-orange-600 text-white font-semibold py-3 rounded hover:bg-orange-700 transition">Registrar Venda</button>
         </form>
         <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
           <table class="w-full text-left" id="table-vendas">
-            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Produto</th><th class="p-4 font-semibold">Qtd</th><th class="p-4 font-semibold">Total (R$)</th><th class="p-4 font-semibold">Desconto</th></tr></thead>
+            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Produto</th><th class="p-4 font-semibold">Qtd</th><th class="p-4 font-semibold">Total (R$)</th><th class="p-4 font-semibold">Desconto (R$)</th><th class="p-4 font-semibold">Ações</th></tr></thead>
             <tbody class="divide-y divide-gray-200"></tbody>
           </table>
         </div>
       </div>
-
-      <div id="section-estoque" class="section-div hidden">
-        <form id="form-estoque" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-sm mb-6 border">
-          <input type="text" id="e_produto" placeholder="Nome/ID do Produto" class="input-style" required>
-          <input type="number" id="e_quantidade" placeholder="Quantidade em Estoque" class="input-style" required>
-          <input type="text" id="e_lote" placeholder="Lote / Referência" class="input-style">
-          <input type="text" id="e_fornecedor" placeholder="Fornecedor" class="input-style">
-          <button type="submit" class="md:col-span-2 bg-teal-600 text-white font-semibold py-3 rounded hover:bg-teal-700 transition">Atualizar Estoque</button>
-        </form>
-        <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <table class="w-full text-left" id="table-estoque">
-            <thead class="bg-gray-100 text-gray-600"><tr><th class="p-4 font-semibold">Produto</th><th class="p-4 font-semibold">Quantidade</th><th class="p-4 font-semibold">Lote</th><th class="p-4 font-semibold">Fornecedor</th></tr></thead>
-            <tbody class="divide-y divide-gray-200"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="section-relatorios" class="section-div hidden">
-        
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-blue-500">
-            <h3 class="text-gray-500 text-sm font-bold uppercase">Clientes</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-clientes">0</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-green-500">
-            <h3 class="text-gray-500 text-sm font-bold uppercase">Produtos</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-produtos">0</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-purple-500">
-            <h3 class="text-gray-500 text-sm font-bold uppercase">Funcionários</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-funcionarios">0</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-orange-500">
-            <h3 class="text-gray-500 text-sm font-bold uppercase">Vendas</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-vendas">0</p>
-          </div>
-          <div class="bg-white p-6 rounded-lg shadow-sm border text-center border-l-4 border-l-teal-500">
-            <h3 class="text-gray-500 text-sm font-bold uppercase">Itens no Estoque</h3>
-            <p class="text-3xl font-bold text-gray-800 mt-2" id="resumo-estoque">0</p>
-          </div>
-        </div>
-
-        <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg">
-          <h2 class="font-bold text-lg mb-2"><i class="fas fa-info-circle mr-2"></i>Status do Sistema Haja</h2>
-          <p>Os painéis acima mostram o volume de dados cadastrados na sessão atual. Para visualizar detalhes granulares, acesse as respectivas abas no menu lateral onde as tabelas completas estão disponíveis logo abaixo de cada formulário.</p>
-        </div>
-
-      </div>
-
-    </main>
-  </div>
-</div>
-
-<script>
-// Data de hoje no cabeçalho
-document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-// Banco de dados simulado (Em memória)
-const db = {
-  clientes: [],
-  produtos: [],
-  funcionarios: [],
-  vendas: [],
-  estoque: []
-};
-
-// Alternar seções e atualizar menu ativo
-function showSection(section, element = null) {
-  // Esconde todas as seções
-  document.querySelectorAll('.section-div').forEach(div => div.classList.add('hidden'));
-  // Mostra a seção desejada
-  document.getElementById(`section-${section}`).classList.remove('hidden');
-  
-  // Atualiza título da página
-  const titulos = {
-    'clientes': 'Cadastro de Clientes',
-    'produtos': 'Cadastro de Produtos',
-    'funcionarios': 'Cadastro de Funcionários',
-    'vendas': 'Registro de Vendas',
-    'estoque': 'Gestão de Estoque',
-    'relatorios': 'Dashboard e Relatórios Gerais'
-  };
-  document.getElementById('page-title').textContent = titulos[section];
-
-  // Atualiza classe ativa no menu
-  if (element) {
-    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('nav-active'));
-    element.classList.add('nav-active');
-  }
-
-  // Se clicou em relatórios, atualiza os contadores
-  if(section === 'relatorios') {
-    atualizarRelatorios();
-  }
-}
-
-// Função genérica para adicionar linhas nas tabelas de cada aba
-function appendRow(tableId, rowData) {
-  const tbody = document.querySelector(`#${tableId} tbody`);
-  const row = document.createElement('tr');
-  row.className = 'hover:bg-gray-50 transition-colors';
-  row.innerHTML = rowData.map(data => `<td class="p-4 border-b border-gray-100">${data || '-'}</td>`).join('');
-  tbody.appendChild(row);
-}
-
-// Atualizar cards do Dashboard
-function atualizarRelatorios() {
-  document.getElementById('resumo-clientes').textContent = db.clientes.length;
-  document.getElementById('resumo-produtos').textContent = db.produtos.length;
-  document.getElementById('resumo-funcionarios').textContent = db.funcionarios.length;
-  document.getElementById('resumo-vendas').textContent = db.vendas.length;
-  
-  // Somar total de itens no estoque
-  const totalEstoque = db.estoque.reduce((acc, curr) => acc + Number(curr.qtd), 0);
-  document.getElementById('resumo-estoque').textContent = totalEstoque;
-}
-
-// Lógica de Submissão - Clientes
-document.getElementById('form-cliente').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const c = { nome: document.getElementById('c_nome').value, cpf: document.getElementById('c_cpf').value, tel: document.getElementById('c_telefone').value, email: document.getElementById('c_email').value };
-  db.clientes.push(c);
-  appendRow('table-clientes', [c.nome, c.cpf, c.tel, c.email]);
-  this.reset();
-  alert('Cliente cadastrado com sucesso!');
-});
-
-// Lógica de Submissão - Produtos
-document.getElementById('form-produto').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const p = { nome: document.getElementById('p_nome').value, marca: document.getElementById('p_marca').value, tipo: document.getElementById('p_tipo').value, valor: document.getElementById('p_valor').value };
-  db.produtos.push(p);
-  appendRow('table-produtos', [p.nome, p.marca, p.tipo, `R$ ${p.valor}`]);
-  this.reset();
-  alert('Produto cadastrado com sucesso!');
-});
-
-// Lógica de Submissão - Funcionários
-document.getElementById('form-funcionario').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const f = { nome: document.getElementById('f_nome').value, cargo: document.getElementById('f_cargo').value, idade: document.getElementById('f_idade').value, salario: document.getElementById('f_salario').value };
-  db.funcionarios.push(f);
-  appendRow('table-funcionarios', [f.nome, f.cargo, f.idade, `R$ ${f.salario}`]);
-  this.reset();
-  alert('Funcionário cadastrado com sucesso!');
-});
-
-// Lógica de Submissão - Vendas
-document.getElementById('form-venda').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const v = { prod: document.getElementById('v_produto').value, qtd: document.getElementById('v_qtd').value, total: document.getElementById('v_valortotal').value, desc: document.getElementById('v_desconto').value };
-  db.vendas.push(v);
-  appendRow('table-vendas', [v.prod, v.qtd, `R$ ${v.total}`, v.desc]);
-  this.reset();
-  alert('Venda registrada com sucesso!');
-});
-
-// Lógica de Submissão - Estoque
-document.getElementById('form-estoque').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const es = { prod: document.getElementById('e_produto').value, qtd: document.getElementById('e_quantidade').value, lote: document.getElementById('e_lote').value, forn: document.getElementById('e_fornecedor').value };
-  db.estoque.push(es);
-  appendRow('table-estoque', [es.prod, es.qtd, es.lote, es.forn]);
-  this.reset();
-  alert('Estoque atualizado com sucesso!');
-});
-
-</script>
-</body>
-</html>
